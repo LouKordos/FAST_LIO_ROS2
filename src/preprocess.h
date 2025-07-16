@@ -16,7 +16,8 @@ enum LID_TYPE
   AVIA = 1,
   VELO16,
   OUST64,
-  MID360
+  MID360,
+  UNITREE = 7
 };  //{1, 2, 3}
 enum TIME_UNIT
 {
@@ -150,6 +151,18 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(livox_ros::LivoxPointXyzitl,
     (uint8_t, line, line)
 )
 
+namespace unitree_ros {
+    struct EIGEN_ALIGN16 Point {
+    PCL_ADD_POINT4D;
+    float intensity;
+    float time;
+    uint16_t ring;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+  };
+}
+
+POINT_CLOUD_REGISTER_POINT_STRUCT(unitree_ros::Point, (float, x, x) (float, y, y) (float, z, z) (float, intensity, intensity) (float, time, time) (uint16_t, ring, ring) )
+
 class Preprocess
 {
   public:
@@ -176,6 +189,7 @@ private:
   void avia_handler(const livox_ros_driver2::msg::CustomMsg::UniquePtr &msg);
   void oust64_handler(const sensor_msgs::msg::PointCloud2::UniquePtr &msg);
   void velodyne_handler(const sensor_msgs::msg::PointCloud2::UniquePtr &msg);
+  void unitree_handler(const sensor_msgs::msg::PointCloud2::UniquePtr &msg);
   void mid360_handler(const sensor_msgs::msg::PointCloud2::UniquePtr &msg);
   void default_handler(const sensor_msgs::msg::PointCloud2::UniquePtr &msg);
   void give_feature(PointCloudXYZI &pl, vector<orgtype> &types);
